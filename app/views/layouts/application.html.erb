@@ -37,7 +37,10 @@
         <% if @login_user %>
 
         <li class="nav-item app-header__nav_item">
-          <%= image_tag @login_user.avatar, size: "40x40", alt: "User's github avatar" %><%= link_to "Logged in as #{@login_user.username}", user_path(@login_user), class: "btn btn-primary" %>
+          <% if @login_user.avatar.nil? == false %>
+            <%= image_tag @login_user.avatar, size: "40x40", alt: "User's github avatar" %>
+          <% end %>
+          <%= link_to "Logged in as #{@login_user.username}", user_path(@login_user), class: "btn btn-primary" %>
         </li>
         <li class="nav-item app-header__nav_item">
           <%= link_to "Log Out", logout_path, method: :post, class: "btn btn-primary" %>
@@ -54,10 +57,10 @@
     </nav>
   </header>
 
-  <% if flash[:result_text] or flash[:messages] %>
+  <% if flash[:notice] or flash[:messages] %>
     <section class="alert__container">
       <div class="alert alert-<%= flash[:status].to_s == 'failure' ? 'warning' : flash[:status] %>">
-        <span><%= flash[:status].to_s == "failure" ? "A problem occurred: " : "" %><%= flash[:result_text] %></span>
+        <span><%= flash[:status].to_s == "failure" ? "A problem occurred: " : "" %><%= flash[:notice] %></span>
         <% if flash[:messages] %>
           <ul>
             <% flash[:messages].each do |name, problems| %>

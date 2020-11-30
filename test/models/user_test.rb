@@ -39,4 +39,24 @@ describe User do
       expect(user2.errors.messages).must_include :username
     end
   end
+
+  describe "build_from_github" do
+    it "correctly builds auth_hash from provider" do
+      user = User.new(
+          provider: "github",
+          uid: "176374",
+          email: "test@testing.com",
+          username: "i_love_tests",
+          avatar: "test"
+      )
+
+      auth_hash = mock_auth_hash(user)
+
+      expect(user.uid).must_equal auth_hash[:uid]
+      expect(user.provider).must_equal auth_hash[:provider]
+      expect(user.username).must_equal auth_hash[:info][:nickname]
+      expect(user.email).must_equal auth_hash[:info][:email]
+      expect(user.avatar).must_equal auth_hash[:info][:image]
+    end
+  end
 end

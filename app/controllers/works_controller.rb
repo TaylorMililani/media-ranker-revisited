@@ -2,6 +2,7 @@ class WorksController < ApplicationController
   # We should always be able to tell what category
   # of work we're dealing with
   before_action :category_from_work, except: [:root, :index, :new, :create]
+  before_action :require_login, except: [:root, :index]
 
   def root
     @albums = Work.best_albums
@@ -66,13 +67,13 @@ class WorksController < ApplicationController
       vote = Vote.new(user: @login_user, work: @work)
       if vote.save
         flash[:status] = :success
-        flash[:result_text] = "Successfully upvoted!"
+        flash[:notice] = "Successfully upvoted!"
       else
-        flash[:result_text] = "Could not upvote"
+        flash[:notice] = "Could not upvote"
         flash[:messages] = vote.errors.messages
       end
     else
-      flash[:result_text] = "You must log in to do that"
+      flash[:notice] = "You must be logged in to do this!"
     end
 
     # Refresh the page to show either the updated vote count
